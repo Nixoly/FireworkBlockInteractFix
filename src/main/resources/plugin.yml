@@ -1,0 +1,6 @@
+name: FireworkBlockInteractFix
+version: '${version}'
+main: dev.nixoly.fireworkblockinteractfix.FireworkBlockInteractFix
+api-version: '1.16'
+authors: [ Nixoly ]
+description: Enforces vanilla-style rules for gliding firework rockets (block in view, cobweb on hitbox while aiming at a block, etc.) on the server so clients cannot bypass those obstacles.

@@ -1,0 +1,61 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
+group = 'dev.nixoly'
+version = '1.0.0'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+    maven { url = 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    maven { url = 'https://repo.codemc.io/repository/maven-releases/' }
+}
+
+dependencies {
+    compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
+    implementation 'com.github.retrooper:packetevents-spigot:2.10.1'
+}
+
+shadowJar {
+    archiveClassifier.set('')
+
+    relocate 'com.github.retrooper.packetevents', 'dev.nixoly.libs.packetevents'
+    relocate 'io.github.retrooper.packetevents', 'dev.nixoly.libs.packetevents.spigot'
+    minimize()
+}
+
+jar {
+    enabled = false
+}
+
+tasks.register('copyShadowJar', Copy) {
+    from(tasks.shadowJar)
+    into("${rootDir}/buildJar")
+}
+
+tasks.clean {
+    delete "${rootDir}/buildJar"
+}
+
+tasks.shadowJar {
+    finalizedBy tasks.copyShadowJar
+}
+
+tasks.build.dependsOn tasks.copyShadowJar
+
+processResources {
+    filesMatching('plugin.yml') {
+        expand 'version': version
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
