@@ -26,9 +26,6 @@ dependencies {
 
 shadowJar {
     archiveClassifier.set('')
-    dependencies {
-        exclude { it.moduleGroup != "org.bstats" }
-    }
     relocate("org.bstats", project.group.toString())
     relocate 'com.github.retrooper.packetevents', 'dev.nixoly.libs.packetevents'
     relocate 'io.github.retrooper.packetevents', 'dev.nixoly.libs.packetevents.spigot'
