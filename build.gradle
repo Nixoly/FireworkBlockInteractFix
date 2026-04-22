@@ -21,15 +21,11 @@ repositories {
 dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
     implementation("org.bstats:bstats-bukkit:3.2.1")
-    implementation 'com.github.retrooper:packetevents-spigot:2.10.1'
 }
 
 shadowJar {
     archiveClassifier.set('')
-    relocate("org.bstats", project.group.toString())
-    relocate 'com.github.retrooper.packetevents', 'dev.nixoly.libs.packetevents'
-    relocate 'io.github.retrooper.packetevents', 'dev.nixoly.libs.packetevents.spigot'
-    minimize()
+    relocate "org.bstats", 'dev.nixoly.libs.bstasts'
 }
 
 jar {

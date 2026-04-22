@@ -3,4 +3,4 @@ version: '${version}'
 main: dev.nixoly.fireworkblockinteractfix.FireworkBlockInteractFix
 api-version: '1.16'
 authors: [ Nixoly ]
-description: Enforces vanilla-style rules for gliding firework rockets (block in view, cobweb on hitbox while aiming at a block, etc.) on the server so clients cannot bypass those obstacles.
+description: If you right-click a firework rocket while your crosshair is on a cobweb, the rocket spawns on that cobweb and shoots upward instead of boosting elytra (works on the ground and while gliding).
