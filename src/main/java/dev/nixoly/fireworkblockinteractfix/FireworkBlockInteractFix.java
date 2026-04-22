@@ -18,11 +18,11 @@ public final class FireworkBlockInteractFix extends JavaPlugin {
     @Override
     public void onEnable() {
         states = new PlayerStateManager();
-        int pluginId = 30893;
-        Metrics metrics = new Metrics(this, pluginId);
 
         PacketEvents.getAPI().getEventManager().registerListener(new FireworkPacketListener(this, states));
         PacketEvents.getAPI().init();
+        int pluginId = 30893;
+        Metrics metrics = new Metrics(this, pluginId);
 
         getServer().getPluginManager().registerEvents(new ElytraFireworkLaunchListener(this, states), this);
     }

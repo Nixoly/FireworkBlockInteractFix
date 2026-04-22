@@ -26,10 +26,9 @@ dependencies {
 
 shadowJar {
     archiveClassifier.set('')
-    relocate("org.bstats", project.group.toString())
+    relocate "org.bstats", 'dev.nixoly.libs.bstasts'
     relocate 'com.github.retrooper.packetevents', 'dev.nixoly.libs.packetevents'
     relocate 'io.github.retrooper.packetevents', 'dev.nixoly.libs.packetevents.spigot'
-    minimize()
 }
 
 jar {
