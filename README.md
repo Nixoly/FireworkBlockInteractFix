@@ -1,3 +1,5 @@
+![image](https://i.imgur.com/nfVy6Ei.png)
+
 # FireworkBlockInteractFix
 
 While gliding, Minecraft is supposed to stop you from using a firework rocket when something in front of you would block it—typically a block you are looking at, or awkward cases like your hitbox clipping a cobweb while your crosshair is still on a real block. Those checks exist so you do not get a rocket boost through a situation where the item should not “go off” like that.
