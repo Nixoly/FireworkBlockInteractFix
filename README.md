@@ -35,4 +35,4 @@ Download the latest `FireworkBlockInteractFix-x.x.x.jar` from **Releases** on th
 
 ## Debugging
 
-Developers can flip `Tunables.DEBUG` to `true` in the source for extra console lines while testing. Turn it off for releases.
+Developers can flip `Settings.DEBUG` to `true` in the source for extra console lines while testing. Turn it off for releases.
