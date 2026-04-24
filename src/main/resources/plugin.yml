@@ -3,4 +3,4 @@ version: '${version}'
 main: dev.nixoly.fireworkblockinteractfix.FireworkBlockInteractFix
 api-version: '1.16'
 authors: [ Nixoly ]
-description: If you right-click a firework rocket while your crosshair is on a cobweb, the rocket spawns on that cobweb and shoots upward instead of boosting elytra (works on the ground and while gliding).
+description: On elytra or on foot, if you use a firework while your crosshair is on a block, vanilla sometimes sticks the rocket to that block and you get no boost. Cancels that rocket and spawns one above the block that shoots straight up.
