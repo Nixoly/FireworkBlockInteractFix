@@ -16,7 +16,7 @@ Modded clients can ignore that and launch anyway. This plugin runs the same idea
 
 ## Requirements
 
-- Spigot or Paper **1.16+** (API version in `plugin.yml` is 1.16)
+- Spigot or Paper **1.16+** (API version is 1.16)
 - Java **8** or newer on the server
 
 PacketEvents is **bundled** in the shaded jar from this repo—you do not install PacketEvents separately unless you build a non-shaded variant yourself.
