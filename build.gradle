@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'dev.nixoly'
-version = '1.0.1'
+version = '1.0.2'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -13,6 +13,7 @@ java {
 
 repositories {
     mavenCentral()
+    maven { url = 'https://jitpack.io' }
     maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
     maven { url = 'https://oss.sonatype.org/content/repositories/snapshots/' }
     maven { url = 'https://repo.codemc.io/repository/maven-releases/' }
@@ -20,12 +21,22 @@ repositories {
 
 dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    implementation 'com.github.Anon8281:UniversalScheduler:0.1.6'
     implementation("org.bstats:bstats-bukkit:3.2.1")
+    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation 'net.kyori:adventure-platform-bukkit:4.3.2'
+    implementation 'net.kyori:adventure-text-minimessage:4.13.1'
 }
 
 shadowJar {
     archiveClassifier.set('')
-    relocate "org.bstats", 'dev.nixoly.libs.bstasts'
+    mergeServiceFiles()
+    relocate 'org.bstats', 'dev.nixoly.libs.bstasts'
+    relocate 'com.github.Anon8281.universalScheduler', 'dev.nixoly.libs.universalscheduler'
+    relocate 'com.google.gson', 'dev.nixoly.libs.gson'
+    relocate 'net.kyori', 'dev.nixoly.libs.kyori'
 }
 
 jar {

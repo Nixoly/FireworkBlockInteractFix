@@ -1,25 +1,23 @@
 package dev.nixoly.fireworkblockinteractfix;
 
-import org.bukkit.Bukkit;
+import com.github.Anon8281.universalScheduler.scheduling.schedulers.TaskScheduler;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.plugin.Plugin;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Consumer;
 
+@RequiredArgsConstructor
 final class RocketCharge {
 
-    private final Plugin plugin;
+    private final TaskScheduler scheduler;
     private final Map<UUID, Held> pendingSnapshots = new HashMap<>();
-
-    RocketCharge(Plugin plugin) {
-        this.plugin = plugin;
-    }
 
     void snapshot(Player player) {
         PlayerInventory inv = player.getInventory();
@@ -30,7 +28,7 @@ final class RocketCharge {
 
     void consumeNextTick(Player player) {
         UUID id = player.getUniqueId();
-        Bukkit.getScheduler().runTask(plugin, () -> {
+        scheduler.runTask(player, () -> {
             Held before = pendingSnapshots.remove(id);
             if (before == null || !player.isOnline() || player.getGameMode() == GameMode.CREATIVE) {
                 return;
@@ -51,7 +49,7 @@ final class RocketCharge {
         decrementIfRocket(inv.getItemInMainHand(), amount -> applyToMainHand(inv, amount));
     }
 
-    private static boolean decrementIfRocket(ItemStack stack, java.util.function.Consumer<ItemStack> apply) {
+    private static boolean decrementIfRocket(ItemStack stack, Consumer<ItemStack> apply) {
         if (stack.getType() != Material.FIREWORK_ROCKET || stack.getAmount() <= 0) {
             return false;
         }

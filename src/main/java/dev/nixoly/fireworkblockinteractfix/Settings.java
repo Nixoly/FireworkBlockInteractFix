@@ -10,6 +10,8 @@ final class Settings {
 
     static final double REPLACEMENT_LIFT = 0.35D;
 
+    static final double RAY_PARAMETER_EPSILON = 1.0e-4D;
+
     private Settings() {
     }
 }

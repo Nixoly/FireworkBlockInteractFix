@@ -2,13 +2,19 @@ package dev.nixoly.fireworkblockinteractfix;
 
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 final class UpdateAnnouncer {
 
-    private static final MiniMessage MINI_MESSAGE = MiniMessage.miniMessage();
+    private static final MiniMessage MM = MiniMessage.miniMessage();
 
     private UpdateAnnouncer() {
     }
@@ -17,66 +23,61 @@ final class UpdateAnnouncer {
         if (currentVersion == null || release == null) {
             return false;
         }
-        String trimmed = currentVersion.trim();
-        if (trimmed.isEmpty()) {
+        String cur = currentVersion.trim();
+        if (cur.isEmpty() || cur.toLowerCase().contains("dev")) {
             return false;
         }
-        if (trimmed.toLowerCase().contains("dev")) {
-            return false;
-        }
-        String a = normalize(trimmed);
-        String b = normalize(release.tagName);
-        return !a.equalsIgnoreCase(b);
+        return !stripLeadingV(cur).equalsIgnoreCase(stripLeadingV(release.tagName));
     }
 
-    private static String normalize(String version) {
-        if (version.length() > 1 && (version.charAt(0) == 'v' || version.charAt(0) == 'V')) {
-            return version.substring(1);
-        }
-        return version;
+    private static String stripLeadingV(String v) {
+        return (v.length() > 1 && (v.charAt(0) == 'v' || v.charAt(0) == 'V')) ? v.substring(1) : v;
     }
 
     static Component buildMessage(String currentVersion, String latestTag, String releaseUrl) {
-        String safeUrl = releaseUrl.replace("'", "\\'");
-        String linkVisible = safeUrl.replace("<", "\\<").replace(">", "\\>");
-        String[] templates = new String[] {
-                "",
-                " <b><gradient:#F64343:#F87B7B>FireworkBlockInteractFix</gradient></b> <dark_gray>»</dark_gray> <green>A new update is available!",
-                "",
-                "  <gray>Current: <red>%current%</red></gray>",
-                "  <gray>Latest: <green>%latest%</green></gray>",
-                "",
-                "  <gray>Download: <click:open_url:'" + safeUrl + "'><aqua><underlined>{link}</underlined></aqua></click></gray>",
-                ""
-        };
+        Component github = Component.text("GitHub", NamedTextColor.AQUA)
+                .decorate(TextDecoration.UNDERLINED)
+                .clickEvent(ClickEvent.openUrl(releaseUrl))
+                .hoverEvent(HoverEvent.showText(
+                        Component.text("Latest release on GitHub — click to open.", TextColor.fromHexString("#A1DDCC"))));
 
-        Component out = Component.empty();
-        for (int i = 0; i < templates.length; i++) {
-            if (i > 0) {
-                out = out.append(Component.newline());
-            }
-            String line = templates[i]
-                    .replace("%current%", escapeMiniMessage(currentVersion))
-                    .replace("%latest%", escapeMiniMessage(latestTag))
-                    .replace("{link}", linkVisible);
-            out = out.append(MINI_MESSAGE.deserialize(line));
-        }
-        return out;
+        Component download = Component.text("  Download: ", NamedTextColor.GRAY).append(github);
+
+        String cur = escape(currentVersion);
+        String lat = escape(latestTag);
+
+        return Component.empty()
+                .append(Component.newline())
+                .append(MM.deserialize(
+                        " <b><gradient:#F64343:#F87B7B>FireworkBlockInteractFix</gradient></b> <dark_gray>»</dark_gray> <green>A new update is available!"))
+                .append(Component.newline())
+                .append(Component.newline())
+                .append(MM.deserialize("  <gray>Current: <red>" + cur + "</red></gray>"))
+                .append(Component.newline())
+                .append(MM.deserialize("  <gray>Latest: <green>" + lat + "</green></gray>"))
+                .append(Component.newline())
+                .append(Component.newline())
+                .append(download)
+                .append(Component.newline());
     }
 
-    private static String escapeMiniMessage(String raw) {
-        if (raw == null) {
+    private static String escape(String s) {
+        if (s == null) {
             return "";
         }
-        return raw.replace("\\", "\\\\").replace("<", "\\<");
+        return s.replace("\\", "\\\\").replace("<", "\\<");
     }
 
     static void broadcast(BukkitAudiences audiences, Component message) {
         audiences.console().sendMessage(message);
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.isOp()) {
-                audiences.player(player).sendMessage(message);
+                sendToPlayer(player, message);
             }
         }
+    }
+
+    static void sendToPlayer(Player player, Component message) {
+        player.spigot().sendMessage(BungeeComponentSerializer.get().serialize(message));
     }
 }
