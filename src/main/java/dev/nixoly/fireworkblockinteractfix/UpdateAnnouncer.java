@@ -39,7 +39,7 @@ final class UpdateAnnouncer {
                 .decorate(TextDecoration.UNDERLINED)
                 .clickEvent(ClickEvent.openUrl(releaseUrl))
                 .hoverEvent(HoverEvent.showText(
-                        Component.text("Latest release on GitHub — click to open.", TextColor.fromHexString("#A1DDCC"))));
+                        Component.text("Click to download the lasest release on github.", TextColor.fromHexString("#A1DDCC"))));
 
         Component download = Component.text("  Download: ", NamedTextColor.GRAY).append(github);
 
