@@ -1,7 +1,0 @@
-name: FireworkBlockInteractFix
-version: '${version}'
-main: dev.nixoly.fireworkblockinteractfix.FireworkBlockInteractFix
-api-version: '1.16'
-folia-supported: true
-authors: [ Nixoly ]
-description: On elytra or on foot, if you use a firework while your crosshair is on a block, vanilla sometimes sticks the rocket to that block and you get no boost. Cancels that rocket and spawns one above the block that shoots straight up.
