@@ -13,6 +13,10 @@ final class SightLine {
     }
 
     static Optional<Block> blockInFrontOf(Player player) {
+        if (player.getEyeLocation().getBlock().getType().name().contains("WEB")) {
+            return Optional.empty();
+        }
+
         Vector origin = player.getEyeLocation().toVector();
         Vector direction = player.getEyeLocation().getDirection();
 
@@ -24,9 +28,22 @@ final class SightLine {
             return Optional.empty();
         }
 
+        boolean isCobweb = hit.getType().name().contains("WEB");
+
         double along = direction.dot(hit.getLocation().add(0.5, 0.5, 0.5).toVector().subtract(origin));
 
-        if (occludingPlayerAlong <= along + Settings.RAY_PARAMETER_EPSILON) {
+        if (!isCobweb && occludingPlayerAlong <= Settings.REACH) {
+            if (occludingPlayerAlong <= along + Settings.RAY_PARAMETER_EPSILON || along < 1.5D) {
+                return Optional.empty();
+            }
+        }
+
+        double verticalDist = hit.getLocation().add(0.5, 0.5, 0.5).getY() - origin.getY();
+        if (verticalDist > Settings.MAX_VERTICAL_BLOCK_DISTANCE) {
+            return Optional.empty();
+        }
+
+        if (!isCobweb && occludingPlayerAlong <= along + Settings.RAY_PARAMETER_EPSILON) {
             return Optional.empty();
         }
 
