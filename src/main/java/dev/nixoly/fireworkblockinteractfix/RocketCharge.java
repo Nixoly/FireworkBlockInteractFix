@@ -46,7 +46,28 @@ final class RocketCharge {
         if (decrementIfRocket(inv.getItemInOffHand(), amount -> applyToOffHand(inv, amount))) {
             return;
         }
-        decrementIfRocket(inv.getItemInMainHand(), amount -> applyToMainHand(inv, amount));
+        if (decrementIfRocket(inv.getItemInMainHand(), amount -> applyToMainHand(inv, amount))) {
+            return;
+        }
+        removeOneFromStorage(inv);
+    }
+
+    private static void removeOneFromStorage(PlayerInventory inv) {
+        ItemStack[] contents = inv.getStorageContents();
+        for (int slot = 0; slot < contents.length; slot++) {
+            ItemStack stack = contents[slot];
+            if (stack == null || stack.getType() != Material.FIREWORK_ROCKET || stack.getAmount() <= 0) {
+                continue;
+            }
+            int remaining = stack.getAmount() - 1;
+            if (remaining <= 0) {
+                inv.setItem(slot, null);
+            } else {
+                stack.setAmount(remaining);
+                inv.setItem(slot, stack);
+            }
+            return;
+        }
     }
 
     private static boolean decrementIfRocket(ItemStack stack, Consumer<ItemStack> apply) {

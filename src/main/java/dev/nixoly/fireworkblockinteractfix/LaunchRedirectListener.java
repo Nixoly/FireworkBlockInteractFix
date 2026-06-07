@@ -31,12 +31,23 @@ public final class LaunchRedirectListener implements Listener {
         }
 
         Player player = (Player) shooter;
+        FireworkMeta meta = rocket.getFireworkMeta().clone();
+
+        Block cobweb = SightLine.cobwebToRedirect(player).orElse(null);
+        if (cobweb != null) {
+            redirect(event, rocket, player, cobweb, meta);
+            return;
+        }
+
         Block target = SightLine.blockInFrontOf(player).orElse(null);
         if (target == null) {
             return;
         }
-        FireworkMeta meta = rocket.getFireworkMeta().clone();
 
+        redirect(event, rocket, player, target, meta);
+    }
+
+    private void redirect(ProjectileLaunchEvent event, Firework rocket, Player player, Block target, FireworkMeta meta) {
         charge.snapshot(player);
 
         event.setCancelled(true);

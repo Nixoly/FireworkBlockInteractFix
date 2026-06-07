@@ -13,6 +13,29 @@ final class RayOcclusion {
     private RayOcclusion() {
     }
 
+    static boolean otherPlayerOnSight(Player viewer) {
+        Vector origin = viewer.getEyeLocation().toVector();
+        Vector direction = viewer.getEyeLocation().getDirection();
+        if (nearestOtherPlayerAlongRay(viewer, origin, direction) <= Settings.REACH) {
+            return true;
+        }
+
+        World world = viewer.getWorld();
+        BoundingBox viewerBox = viewer.getBoundingBox();
+        for (Entity entity : world.getNearbyEntities(viewer.getLocation(), Settings.REACH, Settings.REACH, Settings.REACH)) {
+            if (!(entity instanceof Player)) {
+                continue;
+            }
+            if (entity.getUniqueId().equals(viewer.getUniqueId())) {
+                continue;
+            }
+            if (entity.getBoundingBox().overlaps(viewerBox)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     static double nearestOtherPlayerAlongRay(Player viewer, Vector origin, Vector unitDirection) {
         World world = viewer.getWorld();
         Location center = origin.toLocation(world);
