@@ -13,13 +13,11 @@ final class SightLine {
     }
 
     static Optional<Block> cobwebToRedirect(Player player) {
-        Block feet = player.getLocation().getBlock();
         Block eye = player.getEyeLocation().getBlock();
-        Block web = isWeb(feet) ? feet : (isWeb(eye) ? eye : null);
-        if (web == null || RayOcclusion.otherPlayerOnSight(player)) {
+        if (!isWeb(eye) || RayOcclusion.otherPlayerOnSight(player)) {
             return Optional.empty();
         }
-        return Optional.of(web);
+        return Optional.of(eye);
     }
 
     static Optional<Block> blockInFrontOf(Player player) {
