@@ -3,6 +3,7 @@ package dev.nixoly.fireworkblockinteractfix;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 
 import java.util.Optional;
@@ -14,7 +15,7 @@ final class SightLine {
 
     static Optional<Block> cobwebToRedirect(Player player) {
         Block eye = player.getEyeLocation().getBlock();
-        if (!isWeb(eye) || RayOcclusion.otherPlayerOnSight(player)) {
+        if (!isWeb(eye) || RayOcclusion.overlappingOtherPlayerOnSight(player)) {
             return Optional.empty();
         }
         return Optional.of(eye);
@@ -30,7 +31,8 @@ final class SightLine {
 
         double occludingPlayerAlong = RayOcclusion.nearestOtherPlayerAlongRay(player, origin, direction);
 
-        Block hit = player.getTargetBlockExact((int) Math.ceil(Settings.REACH), FluidCollisionMode.NEVER);
+        RayTraceResult blockTrace = player.rayTraceBlocks(Settings.REACH, FluidCollisionMode.NEVER);
+        Block hit = blockTrace == null ? null : blockTrace.getHitBlock();
 
         if (hit == null || hit.getType().isAir()) {
             return Optional.empty();
@@ -41,17 +43,8 @@ final class SightLine {
             return Optional.empty();
         }
 
-        if (isWeb(hit)) {
-            return Optional.of(hit);
-        }
-
-        double along = direction.dot(hit.getLocation().add(0.5, 0.5, 0.5).toVector().subtract(origin));
-
-        if (occludingPlayerAlong <= Settings.REACH) {
-            if (occludingPlayerAlong <= along + Settings.RAY_PARAMETER_EPSILON || along < 1.5D) {
-                return Optional.empty();
-            }
-        }
+        Vector hitPosition = blockTrace.getHitPosition();
+        double along = direction.dot(hitPosition.clone().subtract(origin));
 
         if (occludingPlayerAlong <= along + Settings.RAY_PARAMETER_EPSILON) {
             return Optional.empty();

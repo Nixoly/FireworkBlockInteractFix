@@ -13,23 +13,19 @@ final class RayOcclusion {
     private RayOcclusion() {
     }
 
-    static boolean otherPlayerOnSight(Player viewer) {
+    static boolean overlappingOtherPlayerOnSight(Player viewer) {
+        BoundingBox viewerBox = viewer.getBoundingBox();
         Vector origin = viewer.getEyeLocation().toVector();
         Vector direction = viewer.getEyeLocation().getDirection();
-        if (nearestOtherPlayerAlongRay(viewer, origin, direction) <= Settings.REACH) {
-            return true;
-        }
-
-        World world = viewer.getWorld();
-        BoundingBox viewerBox = viewer.getBoundingBox();
-        for (Entity entity : world.getNearbyEntities(viewer.getLocation(), Settings.REACH, Settings.REACH, Settings.REACH)) {
+        for (Entity entity : viewer.getWorld().getNearbyEntities(viewerBox)) {
             if (!(entity instanceof Player)) {
                 continue;
             }
             if (entity.getUniqueId().equals(viewer.getUniqueId())) {
                 continue;
             }
-            if (entity.getBoundingBox().overlaps(viewerBox)) {
+            BoundingBox otherBox = entity.getBoundingBox();
+            if (otherBox.overlaps(viewerBox) && otherBox.rayTrace(origin, direction, Settings.REACH) != null) {
                 return true;
             }
         }
