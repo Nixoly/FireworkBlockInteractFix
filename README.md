@@ -8,7 +8,7 @@
 
 <div align="center">
 
-While gliding, Minecraft is supposed to stop you from using a firework rocket when something in front of you would block it—typically a block you are looking at, or awkward cases like your hitbox clipping a cobweb while your crosshair is still on a real block. Those checks exist so you do not get a rocket boost through a situation where the item should not “go off” like that.
+While gliding, Minecraft is supposed to stop you from using a firework rocket when something in front of you would block it typically a block you are looking at, or awkward cases like your hitbox clipping a cobweb while your crosshair is still on a real block. Those checks exist so you do not get a rocket boost through a situation where the item should not “go off” like that.
 
 Modded clients can ignore that and launch anyway. This plugin runs the same idea on the server: if the player should have been blocked by those conditions, the rocket launch is undone (position, motion, entity cleanup) so the thrust never sticks.
 
